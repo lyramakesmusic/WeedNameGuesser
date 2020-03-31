@@ -27,6 +27,33 @@
 		button {
 			padding: 5px 15px;
 		}
+
+		#pulse {
+			opacity: 0;
+			position: relative;
+		}
+
+		.pulsing {
+			animation: pulseAlpha .666s linear infinite;
+		}
+
+		@keyframes pulseAlpha {
+			0% {
+				opacity: 0;
+			}
+
+			5% {
+				opacity: 1;
+			}
+
+			25% {
+				opacity: 1;
+			}
+
+			100% {
+				opacity: 0;
+			}
+		}
 	</style>
 </head>
 
@@ -36,13 +63,16 @@
 	<div class="container" id="container">
 
 		<br><br>
-		<h4 id="weedName"></h4>
+		<h4><span id="weedName"></span></h4>
 
 		<br>
 		<!-- <span style="font-size:20px;">Is it&nbsp;</span> -->
-		<button class="btn green waves-effect waves-light" onclick="guess(0)">Real</button>&nbsp;&nbsp;
+		<button class="btn cyan waves-effect waves-light" onclick="guess(0)" id="realBtn">Real</button>&nbsp;&nbsp;
 		<!-- <span style="font-size:20px;">&nbsp;or&nbsp;</span> -->
-		<button class="btn red waves-effect waves-light" onclick="guess(1)">Fake</button>
+		<button class="btn orange waves-effect waves-light" onclick="guess(1)"
+			id="fakeBtn">Fake</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+		<span id="pulse"></span>
 		<!-- <span style="font-size:20px;">&nbsp;?</span> -->
 
 		<br><br>
@@ -93,8 +123,14 @@
 			fakeBar.style.width = containerWidth + "px"
 			realityList.style.width = containerWidth + "px"
 
+			realBtn = document.getElementById("realBtn")
+			fakeBtn = document.getElementById("fakeBtn")
+
+			pulse = document.getElementById("pulse")
+
 
 			next = () => {
+
 				index = Math.floor(Math.random() * real.length)
 				reality = Math.random() < 0.5
 				chosenName = reality ? real[index] : fake[index]
@@ -102,16 +138,34 @@
 				console.log("CHOSEN NAME:" + chosenName)
 				weedName.innerHTML = chosenName
 
+				realBtn.disabled = false
+				fakeBtn.disabled = false
+				pulse.style.visibility = "hidden"
+				pulse.classList.remove("pulsing")
+
 				guess = (state) => {
 					if (state == reality) {
 						failures++
 					} else {
 						successes++
 					}
-					realityList.innerHTML = "<tr><td width='100%'><b>" + chosenName.trim() + "</b></td><td>"+(state != reality ? "<i class='material-icons green-text'>check</i>":"<i class='material-icons red-text'>clear</i>")+"</td></tr>" + realityList.innerHTML
+					realityList.innerHTML = "<tr><td width='100%'><b class=\"" + (reality ? "cyan-text" : "orange-text") + "\">" + chosenName.trim() + "</b></td><td>" + (state != reality ? "<i class='material-icons green-text'>check</i>" : "<i class='material-icons red-text'>clear</i>") + "</td></tr>" + realityList.innerHTML
 					accuracy.innerHTML = ((successes / (successes + failures)) * 100).toFixed(2) + "%"
 					realBar.style.width = ((successes / (successes + failures)) * containerWidth) + "px"
-					next()
+					// disable buttons
+					realBtn.disabled = true
+					fakeBtn.disabled = true
+
+					// check mark pulse
+					if(reality != state) {
+						pulse.innerHTML = "<i class=\"material-icons medium green-text\" style=\"vertical-align: middle;\">check</i>"
+					} else {
+						pulse.innerHTML = "<i class=\"material-icons medium red-text\" style=\"vertical-align: middle;\">close</i>"
+					}
+					pulse.style.visibility = "visible"
+					pulse.classList.add("pulsing")
+
+					setTimeout(next, 666)
 				}
 			}
 			next()
@@ -130,8 +184,8 @@
 
 	</script>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-	<script>M.AutoInit();</script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+	<script>M.AutoInit();</script> -->
 </body>
 
 </html>
