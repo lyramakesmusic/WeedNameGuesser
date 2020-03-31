@@ -13,6 +13,15 @@
 			box-sizing: border-box;
 			margin: 0;
 			padding: 0;
+			color: white;
+		}
+
+		body {
+			background: #222;
+		}
+
+		tr {
+			border-bottom: #666;
 		}
 
 		button {
@@ -24,15 +33,33 @@
 <body>
 	<!-- Content -->
 
-	<div class="container">
-		<h5>Accuracy: <span id="accuracy">100%</span></h5>
+	<div class="container" id="container">
 
+		<br><br>
 		<h4 id="weedName"></h4>
 
 		<br>
+		<!-- <span style="font-size:20px;">Is it&nbsp;</span> -->
+		<button class="btn green waves-effect waves-light" onclick="guess(0)">Real</button>&nbsp;&nbsp;
+		<!-- <span style="font-size:20px;">&nbsp;or&nbsp;</span> -->
+		<button class="btn red waves-effect waves-light" onclick="guess(1)">Fake</button>
+		<!-- <span style="font-size:20px;">&nbsp;?</span> -->
 
-		<button class="btn green waves-effect waves-light" onclick="guess(0)">Real</button>
-		<button class="btn red waves-effect waves-light" onclick="guess(1)">Not real</button>
+		<br><br>
+
+		<h5>Accuracy: <span id="accuracy"></span></h5>
+		<div style="height:5px;width:300px;background:red;" id="fakeBar">
+			<div style="height:5px;background:green;width:0px;border-right:1px solid white;" id="realBar"></div>
+		</div>
+
+		<br><br>
+
+		<p style="max-height:420px;width:300px;overflow-y:auto;">
+			<table id="realityList">
+
+
+			</table>
+		</p>
 	</div>
 
 	<script>
@@ -57,6 +84,15 @@
 			// console.log("FAKE:"+ fake)
 			accuracy = document.getElementById("accuracy")
 			weedName = document.getElementById("weedName")
+			realityList = document.getElementById("realityList")
+			realBar = document.getElementById("realBar")
+			container = document.getElementById("container")
+			containerWidth = container.clientWidth
+			// console.log(containerWidth)
+			fakeBar = document.getElementById("fakeBar")
+			fakeBar.style.width = containerWidth + "px"
+			realityList.style.width = containerWidth + "px"
+
 
 			next = () => {
 				index = Math.floor(Math.random() * real.length)
@@ -68,16 +104,29 @@
 
 				guess = (state) => {
 					if (state == reality) {
-						successes++
-					} else {
 						failures++
+					} else {
+						successes++
 					}
-					accuracy.innerHTML = (successes / (successes + failures)) * 100 + "%"
+					realityList.innerHTML = "<tr><td width='100%'><b class=\"" + ((state != reality) ? "orange-text" : "purple-text") + "\">" + chosenName.trim() + "</b></td><td style='white-space:nowrap;' class=\"" + (reality ? "green-text" : "red-text") + "\">" + (reality ? "real," : "fake,") + "</td><td style='white-space:nowrap;' class=\"" + (state == 1 ? "red-text" : "green-text") + "\">guessed " + (state ? "fake" : "real") + "</td></tr>" + realityList.innerHTML
+					accuracy.innerHTML = ((successes / (successes + failures)) * 100).toFixed(2) + "%"
+					realBar.style.width = ((successes / (successes + failures)) * containerWidth) + "px"
 					next()
 				}
 			}
 			next()
 		})
+
+		window.onresize = () => {
+			realityList = document.getElementById("realityList")
+			realBar = document.getElementById("realBar")
+			container = document.getElementById("container")
+			containerWidth = container.clientWidth
+			// console.log(containerWidth)
+			fakeBar = document.getElementById("fakeBar")
+			fakeBar.style.width = containerWidth + "px"
+			realityList.style.width = containerWidth + "px"
+		}
 
 	</script>
 
