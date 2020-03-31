@@ -108,7 +108,7 @@
 					} else {
 						successes++
 					}
-					realityList.innerHTML = "<tr><td width='100%'><b class=\"" + ((state != reality) ? "orange-text" : "purple-text") + "\">" + chosenName.trim() + "</b></td><td style='white-space:nowrap;' class=\"" + (reality ? "green-text" : "red-text") + "\">" + (reality ? "real," : "fake,") + "</td><td style='white-space:nowrap;' class=\"" + (state == 1 ? "red-text" : "green-text") + "\">guessed " + (state ? "fake" : "real") + "</td></tr>" + realityList.innerHTML
+					realityList.innerHTML = "<tr><td width='100%'><b>" + chosenName.trim() + "</b></td><td>"+(state != reality ? "<i class='material-icons green-text'>check</i>":"<i class='material-icons red-text'>clear</i>")+"</td></tr>" + realityList.innerHTML
 					accuracy.innerHTML = ((successes / (successes + failures)) * 100).toFixed(2) + "%"
 					realBar.style.width = ((successes / (successes + failures)) * containerWidth) + "px"
 					next()
