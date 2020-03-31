@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" type="image/png" href="assets/icon.png">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		button {
+			padding: 5px 15px;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Content -->
+
+	<div class="container">
+		<h5>Accuracy: <span id="accuracy">100%</span></h5>
+
+		<h4 id="weedName"></h4>
+
+		<br>
+
+		<button class="btn green waves-effect waves-light" onclick="guess(0)">Real</button>
+		<button class="btn red waves-effect waves-light" onclick="guess(1)">Not real</button>
+	</div>
+
+	<script>
+
+		server = "http://localhost:8080"
+		real = ""
+		fake = ""
+
+		successes = 0
+		failures = 0
+
+		getReal = async () => {
+			response = await fetch(server + "/assets/real.txt")
+			real = (await response.text()).split("\n")
+		}
+		getFake = async () => {
+			response = await fetch(server + "/assets/fake.txt")
+			fake = (await response.text()).split("\n")
+		}
+		Promise.all([getReal(), getFake()]).then((values) => {
+			// console.log("REAL:"+ real)
+			// console.log("FAKE:"+ fake)
+			accuracy = document.getElementById("accuracy")
+			weedName = document.getElementById("weedName")
+
+			next = () => {
+				index = Math.floor(Math.random() * real.length)
+				reality = Math.random() < 0.5
+				chosenName = reality ? real[index] : fake[index]
+
+				console.log("CHOSEN NAME:" + chosenName)
+				weedName.innerHTML = chosenName
+
+				guess = (state) => {
+					if (state == reality) {
+						successes++
+					} else {
+						failures++
+					}
+					accuracy.innerHTML = (successes / (successes + failures)) * 100 + "%"
+					next()
+				}
+			}
+			next()
+		})
+
+	</script>
+
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+	<script>M.AutoInit();</script> -->
+</body>
+
+</html>
