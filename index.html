@@ -66,11 +66,13 @@
 		<h4><span id="weedName"></span></h4>
 
 		<br>
-		<!-- <span style="font-size:20px;">Is it&nbsp;</span> -->
-		<button class="btn cyan waves-effect waves-light" onclick="guess(0)" id="realBtn">Real</button>&nbsp;&nbsp;
-		<!-- <span style="font-size:20px;">&nbsp;or&nbsp;</span> -->
-		<button class="btn orange waves-effect waves-light" onclick="guess(1)"
-			id="fakeBtn">Fake</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<div class="right-align">
+			<span id="pulse" class="left-align"><i class="material-icons medium green-text"
+					style="vertical-align: middle;">check</i></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<button class="btn cyan waves-effect waves-light" onclick="guess(0)" id="realBtn">Real</button>&nbsp;&nbsp;
+			<button class="btn orange waves-effect waves-light" onclick="guess(1)" id="fakeBtn">Fake</button>
+		</div>
 
 		<span id="pulse"></span>
 		<!-- <span style="font-size:20px;">&nbsp;?</span> -->
